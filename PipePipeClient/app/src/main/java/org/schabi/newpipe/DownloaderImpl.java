@@ -43,6 +43,7 @@ import static org.schabi.newpipe.MainActivity.DEBUG;
 import static org.schabi.newpipe.extractor.services.bilibili.BilibiliService.WWW_REFERER;
 
 public final class DownloaderImpl extends Downloader {
+    private static final String TAG = "DownloaderImpl";
     public static final String USER_AGENT
             = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0";
     public static final String YOUTUBE_RESTRICTED_MODE_COOKIE_KEY
@@ -92,7 +93,7 @@ public final class DownloaderImpl extends Downloader {
         // MissAvDns internally handles: built-in IPs -> DoH -> system DNS
         if (useBuiltInHosts) {
             clientBuilder.dns(MissAvDns);
-            android.util.Log.d(TAG, "MissAvDns enabled - using built-in IPs with DoH fallback");
+            Log.d(TAG, "MissAvDns enabled - using built-in IPs with DoH fallback");
         }
         // Priority 2: Legacy DoH fallback mode (when built-in hosts are disabled)
         else if (useDnsOverHttpsFallback) {
@@ -116,7 +117,7 @@ public final class DownloaderImpl extends Downloader {
                     }
                 }
             });
-            android.util.Log.d(TAG, "Legacy DoH fallback enabled");
+            Log.d(TAG, "Legacy DoH fallback enabled");
         }
 
         instance = new DownloaderImpl(
