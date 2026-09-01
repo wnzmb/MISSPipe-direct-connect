@@ -27,12 +27,12 @@ class DebugApp : App() {
     }
 
     override fun getDownloader(): Downloader {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val downloader = DownloaderImpl.init(
             OkHttpClient.Builder()
                 .addNetworkInterceptor(StethoInterceptor()),
-            PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-                getString(R.string.use_dns_over_https_fallback_key), false
-            )
+            prefs.getBoolean(getString(R.string.use_dns_over_https_fallback_key), false),
+            prefs.getBoolean(getString(R.string.built_in_hosts_enabled_key), false)
         )
         setCookiesToDownloader(downloader)
         return downloader

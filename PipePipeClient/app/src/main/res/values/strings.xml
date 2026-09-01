@@ -1098,5 +1098,7 @@
 <string name="settings_category_other_platforms_title">Other platforms</string>
 <string name="use_dns_over_https_fallback_title">Use DNS over HTTPS fallback</string>
 <string name="use_dns_over_https_fallback_summary">Retry failed system DNS lookups using Cloudflare DNS over HTTPS. Changing this will restart the app.</string>
+    <string name="built_in_hosts_enabled_title">Use built-in hosts (MissAV direct connect)</string>
+    <string name="built_in_hosts_enabled_summary">Bypass DNS pollution by using hardcoded IPs for MissAV domains with DoH fallback. Changing this will restart the app.</string>
 <string name="youtube_player_client_title">YouTube extraction endpoint</string>
 </resources>

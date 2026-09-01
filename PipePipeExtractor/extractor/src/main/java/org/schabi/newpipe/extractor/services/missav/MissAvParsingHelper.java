@@ -65,7 +65,7 @@ public final class MissAvParsingHelper {
     public static Map<String, List<String>> browserHeaders() {
         final Map<String, List<String>> headers = new HashMap<>();
         headers.put("User-Agent", Collections.singletonList(
-                "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 "
+                "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 "
                         + "(KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"));
         headers.put("Accept", Collections.singletonList(
                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"));

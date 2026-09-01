@@ -20,6 +20,7 @@ import org.schabi.newpipe.extractor.services.bilibili.BilibiliService;
 import org.schabi.newpipe.util.CookieUtils;
 import org.schabi.newpipe.util.InfoCache;
 import org.schabi.newpipe.util.TLSSocketFactoryCompat;
+import org.schabi.newpipe.network.MissAvDns;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -73,14 +74,28 @@ public final class DownloaderImpl extends Downloader {
      * @return a new instance of {@link DownloaderImpl}
      */
     public static DownloaderImpl init(@Nullable final OkHttpClient.Builder builder) {
-        return init(builder, false);
+        return init(builder, false, false);
     }
 
     public static DownloaderImpl init(@Nullable final OkHttpClient.Builder builder,
                                       final boolean useDnsOverHttpsFallback) {
+        return init(builder, useDnsOverHttpsFallback, false);
+    }
+
+    public static DownloaderImpl init(@Nullable final OkHttpClient.Builder builder,
+                                      final boolean useDnsOverHttpsFallback,
+                                      final boolean useBuiltInHosts) {
         final OkHttpClient.Builder clientBuilder = builder != null
                 ? builder : new OkHttpClient.Builder();
-        if (useDnsOverHttpsFallback) {
+
+        // Priority 1: Use MissAvDns if built-in hosts are enabled
+        // MissAvDns internally handles: built-in IPs -> DoH -> system DNS
+        if (useBuiltInHosts) {
+            clientBuilder.dns(MissAvDns);
+            android.util.Log.d(TAG, "MissAvDns enabled - using built-in IPs with DoH fallback");
+        }
+        // Priority 2: Legacy DoH fallback mode (when built-in hosts are disabled)
+        else if (useDnsOverHttpsFallback) {
             final Dns systemDns = Dns.SYSTEM;
             final DnsOverHttps dnsOverHttps = new DnsOverHttps.Builder()
                     .client(new OkHttpClient.Builder().build())
@@ -101,7 +116,9 @@ public final class DownloaderImpl extends Downloader {
                     }
                 }
             });
+            android.util.Log.d(TAG, "Legacy DoH fallback enabled");
         }
+
         instance = new DownloaderImpl(
                 clientBuilder, useDnsOverHttpsFallback);
         return instance;
