@@ -47,6 +47,7 @@ jobs:
       - name: Build debug APK
         run: |
           cd PipePipeClient
+          chmod +x ./gradlew
           ./gradlew assembleDebug lintDebug --stacktrace -DskipFormatKtlint
 
       - name: Upload APKs
