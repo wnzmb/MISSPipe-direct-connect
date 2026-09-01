@@ -45,6 +45,8 @@ jobs:
           cache: 'gradle'
 
       - name: Build debug APK
+        env:
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=768m -XX:ReservedCodeCacheSize=256m"
         run: |
           cd PipePipeClient
           chmod +x ./gradlew
