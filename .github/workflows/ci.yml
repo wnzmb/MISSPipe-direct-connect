@@ -44,6 +44,12 @@ jobs:
           distribution: "temurin"
           cache: 'gradle'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 37
+          build-tools: 35.0.0
+
       - name: Build debug APK
         env:
           GRADLE_OPTS: "-Xmx2048m -XX:MaxMetaspaceSize=768m -XX:ReservedCodeCacheSize=256m"
