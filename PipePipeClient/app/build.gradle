@@ -19,7 +19,7 @@ def isReleasePackagingTask = gradle.startParameter.taskNames.any {
 }
 
 android {
-    compileSdk 37
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.missxxx.misspipe"
