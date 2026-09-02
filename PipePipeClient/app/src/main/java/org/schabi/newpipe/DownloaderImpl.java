@@ -1,6 +1,7 @@
 package org.schabi.newpipe;
 
 import android.content.Context;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
@@ -92,7 +93,7 @@ public final class DownloaderImpl extends Downloader {
         // Priority 1: Use MissAvDns if built-in hosts are enabled
         // MissAvDns internally handles: built-in IPs -> DoH -> system DNS
         if (useBuiltInHosts) {
-            clientBuilder.dns(MissAvDns);
+            clientBuilder.dns(MissAvDns.INSTANCE);
             Log.d(TAG, "MissAvDns enabled - using built-in IPs with DoH fallback");
         }
         // Priority 2: Legacy DoH fallback mode (when built-in hosts are disabled)
