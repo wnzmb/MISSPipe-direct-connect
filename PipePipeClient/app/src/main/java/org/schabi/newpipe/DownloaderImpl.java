@@ -25,6 +25,8 @@ import org.schabi.newpipe.network.MissAvDns;
 import org.schabi.newpipe.network.MissAvFailoverInterceptor;
 import org.schabi.newpipe.network.MissAvSniConfig;
 import org.schabi.newpipe.network.MissAvCloudflareInterceptor;
+import org.schabi.newpipe.network.MissAvSniSocketFactory;
+import org.schabi.newpipe.network.MissAvEmptySniSocketFactory;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;

@@ -59,6 +59,7 @@ object MissAvSniConfig {
                 || host.equals("fourhoi.com", ignoreCase = true)
     }
 
+    @JvmStatic
     fun createHostnameVerifier(): HostnameVerifier {
         return when (mode) {
             Mode.PLAIN -> javax.net.ssl.HttpsURLConnection.getDefaultHostnameVerifier()

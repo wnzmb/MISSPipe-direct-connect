@@ -16,6 +16,7 @@ object MissAvDirectConnectConfig {
 
     private const val TAG = "MissAvDirectConnect"
 
+    @JvmStatic
     fun sync(context: Context) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
