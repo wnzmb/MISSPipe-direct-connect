@@ -93,9 +93,6 @@ class MissAvCloudflareActivity : Activity() {
         const val KEY_CF_COOKIES = "cf_cookies"
 
         var onFinished: (() -> Unit)? = null
-    }
-
-    private companion object {
         const val TAG = "MissAvCFActivity"
     }
 }
