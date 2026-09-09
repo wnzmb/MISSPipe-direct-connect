@@ -97,7 +97,7 @@
                 app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="@string/built_in_hosts_enabled_key"
                 android:summary="@string/built_in_hosts_enabled_summary"
                 android:title="@string/built_in_hosts_enabled_title"

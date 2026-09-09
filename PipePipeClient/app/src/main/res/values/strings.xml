@@ -1096,20 +1096,20 @@
 <string name="export_data_to_newpipe_title">Export to NewPipe</string>
 <string name="export_data_to_newpipe_summary">Export backup in a NewPipe-compatible format</string>
 <string name="settings_category_other_platforms_title">Other platforms</string>
-<string name="use_dns_over_https_fallback_title">Use DNS over HTTPS fallback</string>
-<string name="use_dns_over_https_fallback_summary">Retry failed system DNS lookups using Cloudflare DNS over HTTPS. Changing this will restart the app.</string>
-    <string name="built_in_hosts_enabled_title">Use built-in hosts (MissAV direct connect)</string>
-    <string name="built_in_hosts_enabled_summary">Bypass DNS pollution by using hardcoded IPs for MissAV domains with DoH fallback. Changing this will restart the app.</string>
-    <string name="missav_custom_ips_title">Custom direct-connect IPs</string>
-    <string name="missav_custom_ips_summary">Comma-separated IPs tried before the built-in ones for MissAV domains and the image CDN, e.g. 104.20.18.168,104.20.19.168. Applied immediately.</string>
-    <string name="missav_custom_domains_title">Custom MissAV backup domains</string>
-    <string name="missav_custom_domains_summary">Comma-separated backup domains added to the failover list, e.g. missav.one,missav.ai. Applied immediately.</string>
-    <string name="sni_mode_title">SNI mode (MissAV direct connect)</string>
-    <string name="sni_mode_summary">plain=default, replace=replace SNI, empty=empty SNI. Changing this will restart the app.</string>
+    <string name="use_dns_over_https_fallback_title">使用 DNS over HTTPS 备用</string>
+    <string name="use_dns_over_https_fallback_summary">使用 Cloudflare DNS over HTTPS 重试失败的系统 DNS 查询。更改此设置将重启应用。</string>
+    <string name="built_in_hosts_enabled_title">启用内置 Hosts（MissAV 直连）</string>
+    <string name="built_in_hosts_enabled_summary">使用硬编码 IP 绕过 DNS 污染，支持 DoH 回退。更改此设置将重启应用。</string>
+    <string name="missav_custom_ips_title">自定义直连 IP</string>
+    <string name="missav_custom_ips_summary">逗号分隔的 IP，优先于内置 IP 用于 MissAV 域名和图片 CDN，例如 104.20.18.168,104.20.19.168。立即生效。</string>
+    <string name="missav_custom_domains_title">自定义 MissAV 备用域名</string>
+    <string name="missav_custom_domains_summary">逗号分隔的备用域名，添加到故障转移列表，例如 missav.one,missav.ai。立即生效。</string>
+    <string name="sni_mode_title">SNI 模式（MissAV 直连）</string>
+    <string name="sni_mode_summary">plain=默认, replace=替换 SNI, empty=空 SNI。更改此设置将重启应用。</string>
     <string-array name="sni_mode_entries">
-        <item>Plain (default)</item>
-        <item>Replace SNI</item>
-        <item>Empty SNI</item>
+        <item>默认</item>
+        <item>替换 SNI</item>
+        <item>空 SNI</item>
     </string-array>
     <string-array name="sni_mode_values">
         <item>plain</item>

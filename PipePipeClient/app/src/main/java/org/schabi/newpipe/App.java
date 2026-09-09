@@ -145,7 +145,7 @@ public class App extends MultiDexApplication {
         final boolean useDnsOverHttpsFallback = prefs.getBoolean(
                 getString(R.string.use_dns_over_https_fallback_key), false);
         final boolean useBuiltInHosts = prefs.getBoolean(
-                getString(R.string.built_in_hosts_enabled_key), false);
+                getString(R.string.built_in_hosts_enabled_key), true);
         final DownloaderImpl downloader = DownloaderImpl.init(null, useDnsOverHttpsFallback, useBuiltInHosts);
         MissAvDirectConnectConfig.sync(this);
         setCookiesToDownloader(downloader);
