@@ -61,23 +61,19 @@ object MissAvSniConfig {
 
     @JvmStatic
     fun createHostnameVerifier(): HostnameVerifier {
-        return when (mode) {
-            Mode.PLAIN -> javax.net.ssl.HttpsURLConnection.getDefaultHostnameVerifier()
-            Mode.REPLACE,
-            Mode.EMPTY -> HostnameVerifier { hostname, session ->
-                if (isDirectConnectHost(hostname)) {
-                    if (trustAllForDirectConnect) {
-                        return@HostnameVerifier true
-                    }
-                    val peerIp = session.peerHost
-                    val expectedHost = if (mode == Mode.REPLACE) replacementHost else null
-                    if (expectedHost != null && peerIp == expectedHost) {
-                        return@HostnameVerifier true
-                    }
+        val baseVerifier = javax.net.ssl.HttpsURLConnection.getDefaultHostnameVerifier()
+        return HostnameVerifier { hostname, session ->
+            if (isDirectConnectHost(hostname)) {
+                if (trustAllForDirectConnect) {
+                    return@HostnameVerifier true
                 }
-                javax.net.ssl.HttpsURLConnection.getDefaultHostnameVerifier()
-                        .verify(hostname, session)
+                val peerIp = session.peerHost
+                val expectedHost = if (mode == Mode.REPLACE) replacementHost else hostname
+                if (peerIp == expectedHost) {
+                    return@HostnameVerifier true
+                }
             }
+            baseVerifier.verify(hostname, session)
         }
     }
 }
