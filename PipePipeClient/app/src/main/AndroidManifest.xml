@@ -228,6 +228,11 @@
             android:name=".error.ReCaptchaActivity"
             android:label="@string/recaptcha" />
 
+        <activity
+            android:name=".network.MissAvCloudflareActivity"
+            android:label="Cloudflare Verification"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar.Fullscreen" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -259,6 +264,7 @@
                 <data android:host="*.pornhub.com" />
                 <data android:host="missav.ws" />
                 <data android:host="missav.ai" />
+                <data android:host="missav.one" />
                 <data android:host="kissjav.li" />
                 <data android:host="85po.com" />
                 <data android:host="www.85po.com" />
@@ -301,6 +307,7 @@
                 <data android:host="*.pornhub.com" />
                 <data android:host="missav.ws" />
                 <data android:host="missav.ai" />
+                <data android:host="missav.one" />
                 <data android:host="kissjav.li" />
                 <data android:host="85po.com" />
                 <data android:host="www.85po.com" />

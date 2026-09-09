@@ -14,6 +14,7 @@ import androidx.preference.SwitchPreferenceCompat;
 
 import org.schabi.newpipe.R;
 import org.schabi.newpipe.extractor.NewPipe;
+import org.schabi.newpipe.network.MissAvDirectConnectConfig;
 import org.schabi.newpipe.util.DeviceUtils;
 import org.schabi.newpipe.util.NavigationHelper;
 import org.schabi.newpipe.util.PicassoHelper;
@@ -72,6 +73,41 @@ public class AdvancedSettingsFragment extends BasePreferenceFragment implements 
                     defaultPreferences.edit()
                             .putBoolean(getString(R.string.built_in_hosts_enabled_key),
                                     (Boolean) newValue)
+                            .commit();
+                    final Activity activity = getActivity();
+                    if (activity != null) {
+                        NavigationHelper.restartApp(activity);
+                    }
+                    return true;
+                });
+
+        // Custom IPs / domains feed the direct-connect providers directly, so
+        // changes take effect immediately without restarting the app.
+        findPreference(getString(R.string.missav_custom_ips_key))
+                .setOnPreferenceChangeListener((preference, newValue) -> {
+                    defaultPreferences.edit()
+                            .putString(getString(R.string.missav_custom_ips_key),
+                                    (String) newValue)
+                            .commit();
+                    MissAvDirectConnectConfig.sync(requireContext());
+                    return true;
+                });
+
+        findPreference(getString(R.string.missav_custom_domains_key))
+                .setOnPreferenceChangeListener((preference, newValue) -> {
+                    defaultPreferences.edit()
+                            .putString(getString(R.string.missav_custom_domains_key),
+                                    (String) newValue)
+                            .commit();
+                    MissAvDirectConnectConfig.sync(requireContext());
+                    return true;
+                });
+
+        findPreference(getString(R.string.sni_mode_key))
+                .setOnPreferenceChangeListener((preference, newValue) -> {
+                    defaultPreferences.edit()
+                            .putString(getString(R.string.sni_mode_key),
+                                    (String) newValue)
                             .commit();
                     final Activity activity = getActivity();
                     if (activity != null) {

@@ -1,6 +1,7 @@
 package us.shandian.giga.hls.transfer
 
 import org.schabi.newpipe.DownloaderImpl
+import org.schabi.newpipe.extractor.services.missav.MissAvParsingHelper
 import us.shandian.giga.util.Utility
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -112,8 +113,9 @@ class HttpTransferConnectionFactory(
 
     private fun setMissAvRequestProperties(connection: HttpURLConnection) {
         connection.setRequestProperty("User-Agent", MISSAV_USER_AGENT)
-        connection.setRequestProperty("Referer", "https://missav.ws/")
-        connection.setRequestProperty("Origin", "https://missav.ws")
+        val baseUrl = MissAvParsingHelper.baseUrl()
+        connection.setRequestProperty("Referer", "$baseUrl/")
+        connection.setRequestProperty("Origin", baseUrl)
         connection.setRequestProperty("Accept-Language", "ja,en-US;q=0.8,en;q=0.6")
     }
 

@@ -20,7 +20,7 @@ public final class MissAvSearchQueryHandlerFactory extends SearchQueryHandlerFac
     @Override
     public String getUrl(final String query, final List<FilterItem> selectedContentFilter,
                          final List<FilterItem> selectedSortFilter) throws ParsingException {
-        return MissAvParsingHelper.BASE_URL + "/search/"
+        return MissAvParsingHelper.baseUrl() + "/search/"
                 + MissAvParsingHelper.encodeQuery(query);
     }
 }

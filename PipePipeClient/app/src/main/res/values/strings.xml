@@ -1100,5 +1100,21 @@
 <string name="use_dns_over_https_fallback_summary">Retry failed system DNS lookups using Cloudflare DNS over HTTPS. Changing this will restart the app.</string>
     <string name="built_in_hosts_enabled_title">Use built-in hosts (MissAV direct connect)</string>
     <string name="built_in_hosts_enabled_summary">Bypass DNS pollution by using hardcoded IPs for MissAV domains with DoH fallback. Changing this will restart the app.</string>
-<string name="youtube_player_client_title">YouTube extraction endpoint</string>
+    <string name="missav_custom_ips_title">Custom direct-connect IPs</string>
+    <string name="missav_custom_ips_summary">Comma-separated IPs tried before the built-in ones for MissAV domains and the image CDN, e.g. 104.20.18.168,104.20.19.168. Applied immediately.</string>
+    <string name="missav_custom_domains_title">Custom MissAV backup domains</string>
+    <string name="missav_custom_domains_summary">Comma-separated backup domains added to the failover list, e.g. missav.one,missav.ai. Applied immediately.</string>
+    <string name="sni_mode_title">SNI mode (MissAV direct connect)</string>
+    <string name="sni_mode_summary">plain=default, replace=replace SNI, empty=empty SNI. Changing this will restart the app.</string>
+    <string-array name="sni_mode_entries">
+        <item>Plain (default)</item>
+        <item>Replace SNI</item>
+        <item>Empty SNI</item>
+    </string-array>
+    <string-array name="sni_mode_values">
+        <item>plain</item>
+        <item>replace</item>
+        <item>empty</item>
+    </string-array>
+    <string name="youtube_player_client_title">YouTube extraction endpoint</string>
 </resources>

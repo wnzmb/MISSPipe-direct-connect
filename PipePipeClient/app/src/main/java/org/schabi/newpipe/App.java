@@ -22,6 +22,7 @@ import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeApiDecoder;
 import org.schabi.newpipe.ktx.ExceptionUtils;
+import org.schabi.newpipe.network.MissAvDirectConnectConfig;
 import org.schabi.newpipe.settings.NewPipeSettings;
 import org.schabi.newpipe.util.*;
 
@@ -146,6 +147,7 @@ public class App extends MultiDexApplication {
         final boolean useBuiltInHosts = prefs.getBoolean(
                 getString(R.string.built_in_hosts_enabled_key), false);
         final DownloaderImpl downloader = DownloaderImpl.init(null, useDnsOverHttpsFallback, useBuiltInHosts);
+        MissAvDirectConnectConfig.sync(this);
         setCookiesToDownloader(downloader);
         return downloader;
     }

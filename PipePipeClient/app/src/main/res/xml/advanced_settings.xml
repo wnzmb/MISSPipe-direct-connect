@@ -103,6 +103,32 @@
                 android:title="@string/built_in_hosts_enabled_title"
                 app:singleLineTitle="false"
                 app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+                android:key="@string/missav_custom_ips_key"
+                android:summary="@string/missav_custom_ips_summary"
+                android:title="@string/missav_custom_ips_title"
+                app:singleLineTitle="false"
+                app:iconSpaceReserved="false"
+                app:useSimpleSummaryProvider="false" />
+
+        <EditTextPreference
+                android:key="@string/missav_custom_domains_key"
+                android:summary="@string/missav_custom_domains_summary"
+                android:title="@string/missav_custom_domains_title"
+                app:singleLineTitle="false"
+                app:iconSpaceReserved="false"
+                app:useSimpleSummaryProvider="false" />
+
+        <ListPreference
+                android:defaultValue="plain"
+                android:entries="@array/sni_mode_entries"
+                android:entryValues="@array/sni_mode_values"
+                android:key="@string/sni_mode_key"
+                android:summary="%s"
+                android:title="@string/sni_mode_title"
+                app:singleLineTitle="false"
+                app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory

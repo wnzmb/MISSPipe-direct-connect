@@ -10,6 +10,7 @@ import java.net.InetAddress
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 import org.schabi.newpipe.MainActivity
+import org.schabi.newpipe.extractor.services.missav.MissAvDomainManager
 
 /**
  * Custom DNS resolver for MissAV that bypasses DNS pollution by:
@@ -27,34 +28,8 @@ object MissAvDns : Dns {
     private const val DOH_URL = "https://cloudflare-dns.com/dns-query"
     private const val DOH_TIMEOUT_SECONDS = 5L
 
-    // MissAV main domains and known CDN domains
-    private val BUILT_IN_DOMAINS = setOf(
-        "missav.ws", "missav.ai", "missav.wa", "missav.one",
-        "fourhoi.com"  // Image CDN
-    )
-
-    // Cloudflare Anycast IPs for missav.ws CDN
-    // Updated: 2025-01-15 - Sourced from Cloudflare Anycast range
-    // These IPs are subject to change; consider refreshing periodically
-    private val BUILT_IN_IPS = mapOf(
-        "missav.ws" to listOf(
-            "104.20.18.168",
-            "104.20.19.168",
-            "172.64.229.154",
-            "162.159.0.1"
-        ),
-        "fourhoi.com" to listOf(
-            "104.18.32.163",
-            "104.18.33.163",
-            "172.64.229.154"
-        )
-    )
-
-    // Default fallback IPs when domain-specific IPs are not available
-    private val DEFAULT_IPS = listOf(
-        "104.20.18.168",
-        "104.20.19.168"
-    )
+    // Domains handled by the direct-connect IP provider
+    private const val FOURHOI_HOST = "fourhoi.com"
 
     private val dohClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
@@ -67,11 +42,24 @@ object MissAvDns : Dns {
     private var dohAvailable = true
 
     override fun lookup(hostname: String): List<InetAddress> {
-        // 1. Check if this is a domain we have built-in IPs for
-        if (hostname in BUILT_IN_DOMAINS) {
-            val ips = BUILT_IN_IPS[hostname] ?: DEFAULT_IPS
-            Log.d(TAG, "Using built-in IPs for $hostname: $ips")
-            return ips.map { InetAddress.getByName(it) }
+        // 1. Direct-connect domains (MissAV main domains + image CDN):
+        //    rotated built-in/user-defined IPs, bypassing polluted DNS entirely
+        val directIps = MissAvIpProvider.nextIps(hostname)
+        if (directIps.isNotEmpty()) {
+            val addresses = directIps.mapNotNull { ip ->
+                try {
+                    InetAddress.getByName(ip)
+                } catch (e: Exception) {
+                    if (MainActivity.DEBUG) {
+                        Log.w(TAG, "Invalid built-in IP $ip for $hostname", e)
+                    }
+                    null
+                }
+            }
+            if (addresses.isNotEmpty()) {
+                Log.d(TAG, "Using direct-connect IPs for $hostname: $addresses")
+                return addresses
+            }
         }
 
         // 2. For other domains, try DoH first if available
@@ -156,12 +144,8 @@ object MissAvDns : Dns {
     }
 
     /**
-     * Get the list of domains that have built-in IP mappings.
+     * Get the direct-connect domain list (MissAV main domains + image CDN).
      */
-    fun getBuiltInDomains(): Set<String> = BUILT_IN_DOMAINS.toSet()
-
-    /**
-     * Get the hardcoded IPs for a specific domain (for debugging).
-     */
-    fun getBuiltInIps(domain: String): List<String>? = BUILT_IN_IPS[domain]
+    fun getBuiltInDomains(): Set<String> =
+        MissAvDomainManager.getDomains().toSet() + FOURHOI_HOST
 }

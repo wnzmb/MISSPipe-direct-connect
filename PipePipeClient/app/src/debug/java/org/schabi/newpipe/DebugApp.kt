@@ -7,6 +7,7 @@ import leakcanary.AppWatcher
 import leakcanary.LeakCanary
 import okhttp3.OkHttpClient
 import org.schabi.newpipe.extractor.downloader.Downloader
+import org.schabi.newpipe.network.MissAvDirectConnectConfig
 
 class DebugApp : App() {
     override fun onCreate() {
@@ -34,6 +35,7 @@ class DebugApp : App() {
             prefs.getBoolean(getString(R.string.use_dns_over_https_fallback_key), false),
             prefs.getBoolean(getString(R.string.built_in_hosts_enabled_key), false)
         )
+        MissAvDirectConnectConfig.sync(this)
         setCookiesToDownloader(downloader)
         return downloader
     }

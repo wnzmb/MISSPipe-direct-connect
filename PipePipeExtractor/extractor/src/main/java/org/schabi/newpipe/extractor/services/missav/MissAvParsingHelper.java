@@ -32,7 +32,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 public final class MissAvParsingHelper {
-    public static final String BASE_URL = "https://missav.ws";
+    public static final String BASE_URL = "https://missav.one";
     public static final String DEFAULT_LANGUAGE = "ja";
 
     private static final String RECOMBEE_HOST = "client-rapi-missav.recombee.com";
@@ -79,8 +79,8 @@ public final class MissAvParsingHelper {
                 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
                         + "(KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"));
         headers.put("Referer", Collections.singletonList(
-                referer == null || referer.isEmpty() ? BASE_URL + "/" : referer));
-        headers.put("Origin", Collections.singletonList(BASE_URL));
+                referer == null || referer.isEmpty() ? baseUrl() + "/" : referer));
+        headers.put("Origin", Collections.singletonList(baseUrl()));
         headers.put("Accept", Collections.singletonList("*/*"));
         headers.put("Accept-Language", Collections.singletonList("ja,en-US;q=0.8,en;q=0.6"));
         return headers;
@@ -182,7 +182,7 @@ public final class MissAvParsingHelper {
 
     private static List<MissAvSearchResult> searchHtml(final String query, final int count)
             throws IOException, ExtractionException {
-        final Document document = fetchDocument(BASE_URL + "/" + DEFAULT_LANGUAGE
+        final Document document = fetchDocument(baseUrl() + "/" + DEFAULT_LANGUAGE
                 + "/search/" + encodeQuery(query));
         final LinkedHashMap<String, MissAvSearchResult> results = new LinkedHashMap<>();
         for (final Element link : document.select("a[href]")) {
@@ -428,7 +428,15 @@ public final class MissAvParsingHelper {
         if (id.startsWith("http://") || id.startsWith("https://")) {
             return localizeUrl(id);
         }
-        return BASE_URL + "/" + DEFAULT_LANGUAGE + "/" + id;
+        return baseUrl() + "/" + DEFAULT_LANGUAGE + "/" + id;
+    }
+
+    /**
+     * Base URL of the currently active MissAV domain. Falls back to the
+     * default {@link #BASE_URL} constant when no domain switch has occurred.
+     */
+    public static String baseUrl() {
+        return MissAvDomainManager.currentBaseUrl();
     }
 
     public static String toThumbnailUrl(final String id) {
@@ -456,9 +464,26 @@ public final class MissAvParsingHelper {
         if (url == null || url.isEmpty()) {
             return url;
         }
-        final String normalizedHost = url.replaceFirst(
-                "^https?://(?:www\\.)?missav\\.(?:ai|wa)", BASE_URL);
-        return normalizedHost.replaceFirst("/(?:en|zh|tw|ko|th|vi|id|ms|de|fr|es|pt)/",
+        // Rewrite any known MissAV main domain (default or user-configured) to the
+        // currently active domain, so failover takes effect for existing URLs too.
+        String result = url;
+        final int schemeEnd = result.indexOf("://");
+        if (schemeEnd > 0) {
+            int hostStart = schemeEnd + 3;
+            if (result.regionMatches(true, hostStart, "www.", 0, 4)) {
+                hostStart += 4;
+            }
+            int hostEnd = hostStart;
+            while (hostEnd < result.length()
+                    && "/?#:".indexOf(result.charAt(hostEnd)) < 0) {
+                hostEnd++;
+            }
+            final String host = result.substring(hostStart, hostEnd);
+            if (MissAvDomainManager.isKnownMissAvDomain(host)) {
+                result = baseUrl() + result.substring(hostEnd);
+            }
+        }
+        return result.replaceFirst("/(?:en|zh|tw|ko|th|vi|id|ms|de|fr|es|pt)/",
                 "/" + DEFAULT_LANGUAGE + "/");
     }
 

@@ -28,7 +28,7 @@ public final class MissAvService extends StreamingService {
 
     @Override
     public String getBaseUrl() {
-        return MissAvParsingHelper.BASE_URL;
+        return MissAvDomainManager.currentBaseUrl();
     }
 
     @Override

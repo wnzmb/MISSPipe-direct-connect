@@ -22,6 +22,9 @@ import org.schabi.newpipe.util.CookieUtils;
 import org.schabi.newpipe.util.InfoCache;
 import org.schabi.newpipe.util.TLSSocketFactoryCompat;
 import org.schabi.newpipe.network.MissAvDns;
+import org.schabi.newpipe.network.MissAvFailoverInterceptor;
+import org.schabi.newpipe.network.MissAvSniConfig;
+import org.schabi.newpipe.network.MissAvCloudflareInterceptor;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -94,7 +97,35 @@ public final class DownloaderImpl extends Downloader {
         // MissAvDns internally handles: built-in IPs -> DoH -> system DNS
         if (useBuiltInHosts) {
             clientBuilder.dns(MissAvDns.INSTANCE);
+            clientBuilder.addNetworkInterceptor(new MissAvFailoverInterceptor());
             Log.d(TAG, "MissAvDns enabled - using built-in IPs with DoH fallback");
+
+            final android.content.Context appContext = org.schabi.newpipe.App.getApp();
+            final android.content.SharedPreferences prefs = android.preference.PreferenceManager
+                    .getDefaultSharedPreferences(appContext);
+            final String sniMode = prefs.getString(appContext.getString(
+                    org.schabi.newpipe.R.string.sni_mode_key), "plain");
+            if ("replace".equals(sniMode)) {
+                final javax.net.ssl.X509TrustManager trustManager =
+                        getDefaultX509TrustManager();
+                final MissAvSniSocketFactory sniFactory =
+                        new MissAvSniSocketFactory(trustManager);
+                clientBuilder.sslSocketFactory(sniFactory, trustManager);
+                clientBuilder.hostnameVerifier(MissAvSniConfig.createHostnameVerifier());
+                Log.d(TAG, "MissAv SNI replace mode enabled");
+            } else if ("empty".equals(sniMode)) {
+                final javax.net.ssl.X509TrustManager trustManager =
+                        getDefaultX509TrustManager();
+                final MissAvEmptySniSocketFactory emptyFactory =
+                        new MissAvEmptySniSocketFactory(trustManager);
+                clientBuilder.sslSocketFactory(emptyFactory, trustManager);
+                clientBuilder.hostnameVerifier(MissAvSniConfig.createHostnameVerifier());
+                Log.d(TAG, "MissAv SNI empty mode enabled");
+            }
+
+            clientBuilder.addNetworkInterceptor(
+                    new MissAvCloudflareInterceptor(org.schabi.newpipe.App.getApp()));
+            Log.d(TAG, "MissAvCloudflareInterceptor installed");
         }
         // Priority 2: Legacy DoH fallback mode (when built-in hosts are disabled)
         else if (useDnsOverHttpsFallback) {
@@ -131,6 +162,24 @@ public final class DownloaderImpl extends Downloader {
             return InetAddress.getByAddress(address);
         } catch (final UnknownHostException e) {
             throw new IllegalArgumentException(e);
+        }
+    }
+
+    private static X509TrustManager getDefaultX509TrustManager() {
+        try {
+            final javax.net.ssl.TrustManagerFactory trustManagerFactory =
+                    javax.net.ssl.TrustManagerFactory.getInstance(
+                            javax.net.ssl.TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init((java.security.KeyStore) null);
+            final javax.net.ssl.TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+            if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
+                throw new IllegalStateException("Unexpected default trust managers: "
+                        + java.util.Arrays.toString(trustManagers));
+            }
+            return (X509TrustManager) trustManagers[0];
+        } catch (final java.security.NoSuchAlgorithmException
+                | java.security.KeyStoreException e) {
+            throw new IllegalStateException("Failed to obtain default X509TrustManager", e);
         }
     }
 

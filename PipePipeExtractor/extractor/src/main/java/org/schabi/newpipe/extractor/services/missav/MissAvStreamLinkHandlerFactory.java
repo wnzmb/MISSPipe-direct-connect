@@ -26,9 +26,18 @@ public final class MissAvStreamLinkHandlerFactory extends LinkHandlerFactory {
 
     @Override
     public boolean onAcceptUrl(final String url) {
-        return url != null
-                && (url.contains("missav.ws/") || url.contains("missav.ai/"))
-                && !url.endsWith("missav.ws")
-                && !url.endsWith("missav.ws/");
+        // Accept video URLs on any known MissAV main domain (current, backup or
+        // user-configured), but not the bare domain without a video id path.
+        if (url == null) {
+            return false;
+        }
+        for (final String domain : MissAvDomainManager.getDomains()) {
+            if (url.contains(domain + "/")
+                    && !url.endsWith(domain)
+                    && !url.endsWith(domain + "/")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

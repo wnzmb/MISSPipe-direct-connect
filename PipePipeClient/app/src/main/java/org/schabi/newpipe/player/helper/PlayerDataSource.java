@@ -39,6 +39,7 @@ import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.downloader.Response;
 import org.schabi.newpipe.extractor.exceptions.ParsingException;
 import org.schabi.newpipe.extractor.exceptions.ReCaptchaException;
+import org.schabi.newpipe.extractor.services.missav.MissAvParsingHelper;
 import org.schabi.newpipe.extractor.services.niconico.NicoWebSocketClient;
 import org.schabi.newpipe.extractor.services.niconico.NiconicoService;
 import org.schabi.newpipe.extractor.services.niconico.extractors.NiconicoDMCPayloadBuilder;
@@ -196,11 +197,11 @@ public class PlayerDataSource {
 
     public HlsMediaSource.Factory getMissAvHlsMediaSourceFactory(final String referer) {
         final String pageReferer = referer == null || referer.isEmpty()
-                ? "https://missav.ws/"
+                ? MissAvParsingHelper.baseUrl() + "/"
                 : referer;
         final Map<String, String> headers = Map.of(
                 "Referer", pageReferer,
-                "Origin", "https://missav.ws",
+                "Origin", MissAvParsingHelper.baseUrl(),
                 "Accept", "*/*",
                 "Accept-Language", "ja,en-US;q=0.8,en;q=0.6"
         );

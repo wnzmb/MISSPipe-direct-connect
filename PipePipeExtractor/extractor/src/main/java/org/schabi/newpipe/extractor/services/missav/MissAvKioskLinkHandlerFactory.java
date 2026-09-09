@@ -33,18 +33,18 @@ public final class MissAvKioskLinkHandlerFactory extends ListLinkHandlerFactory 
                          final List<FilterItem> sortFilter) throws ParsingException {
         switch (id) {
             case "popular":
-                return MissAvParsingHelper.BASE_URL + "/" + MissAvParsingHelper.DEFAULT_LANGUAGE
+                return MissAvParsingHelper.baseUrl() + "/" + MissAvParsingHelper.DEFAULT_LANGUAGE
                         + "/popular";
             case "recommended":
-                return MissAvParsingHelper.BASE_URL + "/" + MissAvParsingHelper.DEFAULT_LANGUAGE;
+                return MissAvParsingHelper.baseUrl() + "/" + MissAvParsingHelper.DEFAULT_LANGUAGE;
             case "latest":
             default:
-                return MissAvParsingHelper.BASE_URL + "/" + MissAvParsingHelper.DEFAULT_LANGUAGE;
+                return MissAvParsingHelper.baseUrl() + "/" + MissAvParsingHelper.DEFAULT_LANGUAGE;
         }
     }
 
     @Override
     public boolean onAcceptUrl(final String url) {
-        return url != null && url.contains("missav.ws");
+        return url != null && MissAvDomainManager.isKnownMissAvDomain(url);
     }
 }

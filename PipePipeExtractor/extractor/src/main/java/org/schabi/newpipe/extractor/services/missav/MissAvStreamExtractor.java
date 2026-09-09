@@ -176,7 +176,7 @@ public final class MissAvStreamExtractor extends StreamExtractor {
         final List<String> actresses = MissAvParsingHelper.actressNames(document);
         return actresses.isEmpty()
                 ? ""
-                : MissAvParsingHelper.BASE_URL + "/search/"
+                : MissAvParsingHelper.baseUrl() + "/search/"
                         + MissAvParsingHelper.encodeQuery(actresses.get(0));
     }
 
